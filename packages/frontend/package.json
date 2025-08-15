@@ -4,9 +4,9 @@
   "description": "Tune8 Next.js Frontend",
   "private": true,
   "scripts": {
-    "dev": "next dev -p ${FRONTEND_PORT:-3000}",
-    "build": "NODE_ENV=production next build",
     "start": "next start -p ${FRONTEND_PORT:-3000}",
+    "start:dev": "next dev -p ${FRONTEND_PORT:-3000}",
+    "build": "NODE_ENV=production next build",
     "lint": "next lint",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",

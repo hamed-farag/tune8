@@ -1,6 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ConfigService } from "@nestjs/config";
+import { ValidationPipe } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
 import { AppModule } from "./app.module";
@@ -21,6 +22,15 @@ async function bootstrap() {
   // Set global API prefix
   const apiPrefix = configService.get("api.prefix");
   app.setGlobalPrefix(apiPrefix);
+
+  // Enable global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    })
+  );
 
   // Swagger documentation setup
   const config = new DocumentBuilder()

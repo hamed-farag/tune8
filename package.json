@@ -4,7 +4,7 @@
   "description": "Tune8 monorepo with NestJS API and Next.js frontend",
   "private": true,
   "scripts": {
-    "dev": "lerna run dev --parallel",
+    "dev": "lerna run start:dev --parallel",
     "dev:api": "lerna run start:dev --scope=@tune8/api",
     "dev:frontend": "lerna run start:dev --scope=@tune8/frontend",
     "/": "/",
