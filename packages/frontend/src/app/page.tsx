@@ -1,137 +1,261 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { Search, ChevronLeft, ChevronRight, Menu } from "lucide-react";
 
-import config from "../config/env";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Sidebar,
+  PodcastCard,
+  EpisodeCard,
+  PodcastCardSkeleton,
+  EpisodeCardSkeleton,
+} from "@/components";
 
-// Add dynamic import to prevent SSR issues
-const dynamicConfig =
-  typeof window !== "undefined"
-    ? config
-    : {
-        app: {
-          name: "Tune8",
-          version: "1.0.0",
-        },
-      };
-
-interface HealthResponse {
-  status: string;
-  timestamp: string;
+interface PodcastCard {
+  id: string;
+  title: string;
+  artist: string;
+  imageUrl: string;
+  isPlaceholder?: boolean;
 }
 
+interface EpisodeCard {
+  id: string;
+  title: string;
+  podcastName: string;
+  imageUrl: string;
+}
+
+const mockPodcasts: PodcastCard[] = [
+  {
+    id: "1",
+    title: "بودكاست فنجان",
+    artist: "بودكاست فنجان",
+    imageUrl: "/api/placeholder/150/150",
+  },
+  {
+    id: "2",
+    title: "فنجان قهوة",
+    artist: "Omar Eldeep",
+    imageUrl: "/api/placeholder/150/150",
+    isPlaceholder: true,
+  },
+  {
+    id: "3",
+    title: "فنجان قهوة",
+    artist: "Mashael saud",
+    imageUrl: "/api/placeholder/150/150",
+    isPlaceholder: true,
+  },
+  {
+    id: "4",
+    title: "بودكاست فنجان قهوة",
+    artist: "OUMA Ahmed Abdelbasset",
+    imageUrl: "/api/placeholder/150/150",
+    isPlaceholder: true,
+  },
+  {
+    id: "5",
+    title: "فنجان مع عائشة",
+    artist: "عائشة اشفيعي",
+    imageUrl: "/api/placeholder/150/150",
+    isPlaceholder: true,
+  },
+  {
+    id: "6",
+    title: "یک فنجان آمریکانو",
+    artist: "LngLounge",
+    imageUrl: "/api/placeholder/150/150",
+    isPlaceholder: true,
+  },
+];
+
+const mockEpisodes: EpisodeCard[] = [
+  { id: "1", title: "فنجان مسموم", podcastName: "جناية", imageUrl: "/api/placeholder/60/60" },
+  {
+    id: "2",
+    title: "فنجان قهوة",
+    podcastName: "ناتالو معكن | Nataloo Talks",
+    imageUrl: "/api/placeholder/60/60",
+  },
+  {
+    id: "3",
+    title: "فنجان قهوة",
+    podcastName: "بودكاست النور Al Noor with Coach Maysoon",
+    imageUrl: "/api/placeholder/60/60",
+  },
+  { id: "4", title: "فنجان قهوة", podcastName: "أخبارك ايه", imageUrl: "/api/placeholder/60/60" },
+  {
+    id: "5",
+    title: "الدحيح - زوبعة فنجان",
+    podcastName: "الدحيح",
+    imageUrl: "/api/placeholder/60/60",
+  },
+  { id: "6", title: "فیل و فنجان", podcastName: "زمزمه ادبی", imageUrl: "/api/placeholder/60/60" },
+  {
+    id: "7",
+    title: "أول فنجان قهوة",
+    podcastName: "قهوة وخبرية مع مايا حجيج",
+    imageUrl: "/api/placeholder/60/60",
+  },
+  {
+    id: "8",
+    title: "The Cup - فنجان",
+    podcastName: "Black Dog Radio",
+    imageUrl: "/api/placeholder/60/60",
+  },
+  {
+    id: "9",
+    title: "فنجان مع عائشة",
+    podcastName: "فنجان مع عائشة",
+    imageUrl: "/api/placeholder/60/60",
+  },
+  {
+    id: "10",
+    title: "همسة فنجان | الصور",
+    podcastName: "Podcasts By Reham Ayam",
+    imageUrl: "/api/placeholder/60/60",
+  },
+];
+
 export default function Home() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  // Simulate loading state
   useEffect(() => {
-    const fetchHealth = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get<HealthResponse>("http://localhost:4009/api/health");
-        setHealth(response.data);
-        setError(null);
-      } catch (err) {
-        setError("Failed to fetch API health status");
-        console.error("Error fetching health:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Show loading for 2 seconds
 
-    fetchHealth();
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold text-gray-900 mb-4">
-            Welcome to <span className="text-primary-600">{dynamicConfig.app.name}</span>
-          </h1>
-          <p className="text-xl text-gray-600">
-            Your Music Platform - Built with Next.js and NestJS (v{dynamicConfig.app.version})
-          </p>
-        </div>
+    <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">API Status</h2>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Header */}
+        <header className="bg-gray-800 border-b border-gray-700 py-3 px-4 flex-shrink-0">
+          <div className="flex items-center justify-between gap-4">
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="lg:hidden text-gray-300 hover:text-white flex-shrink-0"
+            >
+              <Menu size={20} />
+            </Button>
 
-          {loading && (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-              <span className="ml-2 text-gray-600">Checking API status...</span>
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">API Connection Error</h3>
-                  <div className="mt-2 text-sm text-red-700">{error}</div>
-                </div>
+            <div className="flex-1 min-w-0">
+              <div className="relative max-w-2xl mx-auto lg:mx-0">
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
+                <Input
+                  type="text"
+                  placeholder="Search through over 70 million podcasts and episodes..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full bg-gray-700 text-white placeholder-gray-400 pl-10 border-gray-600 focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
+                />
               </div>
             </div>
-          )}
+          </div>
+        </header>
 
-          {health && (
-            <div className="bg-green-50 border border-green-200 rounded-md p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-green-800">API is Healthy</h3>
-                  <div className="mt-2 text-sm text-green-700">
-                    <p>Status: {health.status}</p>
-                    <p>Last Check: {new Date(health.timestamp).toLocaleString()}</p>
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full">
+            <main className="p-4 sm:p-6 pb-20 max-w-full">
+              {/* Top Podcasts Section */}
+              <section className="mb-6 sm:mb-8">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h2 className="text-lg sm:text-xl font-semibold">Top podcasts for فنجان</h2>
+                  <div className="flex space-x-1 sm:space-x-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-gray-700 h-8 w-8 sm:h-10 sm:w-10"
+                    >
+                      <ChevronLeft size={16} className="sm:w-5 sm:h-5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-gray-700 h-8 w-8 sm:h-10 sm:w-10"
+                    >
+                      <ChevronRight size={16} className="sm:w-5 sm:h-5" />
+                    </Button>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-        </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Frontend (Next.js)</h3>
-            <ul className="space-y-2 text-gray-600">
-              <li>• React 18 with TypeScript</li>
-              <li>• Next.js 14 App Router</li>
-              <li>• Tailwind CSS for styling</li>
-              <li>• Axios for API calls</li>
-            </ul>
-          </div>
+                <div className="relative">
+                  <div className="flex space-x-3 sm:space-x-6 overflow-x-auto pb-4 scrollbar-hide">
+                    <div className="flex space-x-3 sm:space-x-6">
+                      {isLoading
+                        ? // Show skeleton loading
+                          Array.from({ length: 6 }).map((_, index) => (
+                            <PodcastCardSkeleton key={index} />
+                          ))
+                        : // Show actual content
+                          mockPodcasts.map(podcast => (
+                            <PodcastCard
+                              key={podcast.id}
+                              id={podcast.id}
+                              title={podcast.title}
+                              artist={podcast.artist}
+                              imageUrl={podcast.imageUrl}
+                              isPlaceholder={podcast.isPlaceholder}
+                            />
+                          ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
 
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Backend (NestJS)</h3>
-            <ul className="space-y-2 text-gray-600">
-              <li>• NestJS framework</li>
-              <li>• TypeScript support</li>
-              <li>• Swagger documentation</li>
-              <li>• CORS enabled</li>
-            </ul>
-          </div>
+              {/* Top Episodes Section */}
+              <section className="w-full">
+                <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+                  Top episodes for فنجان
+                </h2>
+                <div className="w-full">
+                  <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {isLoading
+                      ? // Show skeleton loading
+                        Array.from({ length: 8 }).map((_, index) => (
+                          <EpisodeCardSkeleton key={index} />
+                        ))
+                      : // Show actual content
+                        mockEpisodes.map(episode => (
+                          <EpisodeCard
+                            key={episode.id}
+                            id={episode.id}
+                            title={episode.title}
+                            podcastName={episode.podcastName}
+                            imageUrl={episode.imageUrl}
+                          />
+                        ))}
+                  </div>
+                </div>
+              </section>
+            </main>
+          </ScrollArea>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
