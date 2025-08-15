@@ -36,8 +36,10 @@ export default function PodcastCard({
               )}
             </div>
             <div className="text-center">
-              <h3 className="font-medium text-xs sm:text-sm mb-1 line-clamp-2">{title}</h3>
-              <p className="text-gray-400 text-xs line-clamp-1">{artist}</p>
+              <h3 className="font-semibold text-sm text-gray-100 leading-tight group-hover:text-white transition-colors duration-200 line-clamp-2 mb-1">
+                {title}
+              </h3>
+              <p className="text-gray-400 text-xs font-medium line-clamp-1">{artist}</p>
             </div>
           </div>
         </CardContent>
