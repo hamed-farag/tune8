@@ -12,13 +12,17 @@ import {
   ItunesTvShowSearchResult,
   ItunesGenericSearchResult,
 } from "../dto";
+import { DynamoDBService } from "./dynamodb.service";
 
 @Injectable()
 export class ItunesService {
   private readonly baseUrl = "https://itunes.apple.com";
   private readonly searchEndpoint = "/search";
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly dynamoDBService: DynamoDBService
+  ) {}
 
   async search(searchParams: ItunesSearchDto): Promise<ItunesGenericSearchResult> {
     try {
@@ -66,7 +70,50 @@ export class ItunesService {
         })
       );
 
-      return response.data;
+      // Determine search type based on parameters
+      let searchType = "generic";
+      if (searchParams.media === "music") {
+        if (searchParams.entity === "musicTrack") {
+          searchType = "music";
+        } else if (searchParams.entity === "musicArtist") {
+          searchType = "artist";
+        } else if (searchParams.entity === "album") {
+          searchType = "album";
+        }
+      } else if (searchParams.media === "podcast") {
+        searchType = "podcast";
+      } else if (searchParams.media === "movie") {
+        searchType = "movie";
+      } else if (searchParams.media === "tvShow") {
+        searchType = "tvshow";
+      }
+
+      // Store results in DynamoDB
+      let searchId: string | null = null;
+      let storedResults = null;
+
+      try {
+        searchId = await this.dynamoDBService.storeItunesSearchResults(
+          searchType,
+          searchParams.term,
+          searchParams,
+          response.data
+        );
+
+        storedResults = await this.dynamoDBService.getItunesSearchResults(searchId);
+      } catch (storageError) {
+        console.warn(
+          "Failed to store results in DynamoDB, continuing without storage:",
+          storageError
+        );
+        // Continue without storage - the API should still work
+      }
+
+      // Return results with search ID (if available)
+      return {
+        ...(storedResults || response.data),
+        searchId: searchId || null,
+      };
     } catch (error) {
       if (error.response) {
         // iTunes API returned an error response

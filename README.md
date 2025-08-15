@@ -1,14 +1,17 @@
 # Tune8 Monorepo
 
-A modern monorepo built with Lerna and pnpm, containing a NestJS API backend and a Next.js frontend.
+A modern monorepo built with Lerna and pnpm, containing a NestJS API backend with iTunes integration and a Next.js frontend.
 
 ## 🏗️ Project Structure
 
 ```
 tune8/
 ├── packages/
-│   ├── api/          # NestJS API backend
+│   ├── api/          # NestJS API backend with iTunes integration
 │   └── frontend/     # Next.js frontend
+├── docker/
+│   └── dynamodb/     # DynamoDB local data storage
+├── docker-compose.yml # Docker services configuration
 ├── lerna.json        # Lerna configuration
 ├── pnpm-workspace.yaml # pnpm workspace configuration
 ├── .prettierrc       # Prettier configuration
@@ -22,6 +25,7 @@ tune8/
 
 - Node.js (v18 or higher)
 - pnpm (v8 or higher)
+- Docker (for DynamoDB local)
 
 ### Installation
 
@@ -38,6 +42,12 @@ cd tune8
 pnpm install
 ```
 
+3. Start DynamoDB local (optional):
+
+```bash
+docker-compose up -d
+```
+
 ### Development
 
 Start both projects in development mode:
@@ -50,6 +60,7 @@ This will start:
 
 - **API**: http://localhost:4009
 - **Frontend**: http://localhost:4010
+- **DynamoDB Local**: http://localhost:8000 (if using Docker)
 
 ### Individual Commands
 
@@ -79,6 +90,16 @@ pnpm build:frontend
 pnpm --filter @tune8/frontend start
 ```
 
+#### DynamoDB Local
+
+```bash
+# Start DynamoDB local
+docker-compose up -d
+
+# Stop DynamoDB local
+docker-compose down
+```
+
 ## 📦 Available Scripts
 
 - `pnpm dev` - Start both projects in development mode
@@ -96,25 +117,34 @@ pnpm --filter @tune8/frontend start
 
 ### Backend (API)
 
-- **Framework**: NestJS
-- **Language**: TypeScript
-- **Documentation**: Swagger/OpenAPI
+- **Framework**: NestJS 10
+- **Language**: TypeScript 5
+- **Documentation**: Swagger/OpenAPI 7
 - **Port**: 4009
 - **Configuration**: @nestjs/config with dotenv
+- **External APIs**: iTunes Search API integration via @nestjs/axios
+- **Database**: DynamoDB Local (Docker) with AWS SDK v3
+- **Validation**: class-validator and class-transformer
 
 ### Frontend
 
 - **Framework**: Next.js 14
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4
 - **HTTP Client**: Axios
-- **Port**: 4010
+- **Port**: 4010 (configurable via FRONTEND_PORT)
 - **Configuration**: dotenv for environment variables
+
+### Infrastructure
+
+- **Database**: DynamoDB Local (Docker container)
+- **Containerization**: Docker Compose
+- **Data Persistence**: Local volume mounting
 
 ### Monorepo Tools
 
 - **Package Manager**: pnpm
-- **Monorepo Tool**: Lerna
+- **Monorepo Tool**: Lerna 8
 - **Workspace Management**: pnpm workspaces
 - **Code Quality**: ESLint + Prettier
 
@@ -153,17 +183,7 @@ The workspace includes VS Code settings for:
 
 ### Environment Variables
 
-The project uses a single root `.env` file for all environment variables across both API and Frontend packages. This simplifies configuration management and ensures consistency.
-
-#### Manual Setup
-
-1. Copy the example environment file:
-
-```bash
-cp .env.example .env
-```
-
-2. Or create a single `.env` file in the root directory manually:
+The project uses environment variables for configuration. Create a `.env` file in the root directory with the following variables:
 
 **Root Level** (`.env`):
 
@@ -187,7 +207,7 @@ PORT=4009
 API_PREFIX=api
 
 # CORS Configuration
-FRONTEND_URL=http://localhost:4009
+FRONTEND_URL=http://localhost:4010
 
 # =============================================================================
 # FRONTEND CONFIGURATION
@@ -199,6 +219,28 @@ FRONTEND_PORT=4010
 # App Metadata (public)
 NEXT_PUBLIC_APP_NAME=Tune8
 NEXT_PUBLIC_APP_VERSION=1.0.0
+
+# =============================================================================
+# DATABASE CONFIGURATION
+# =============================================================================
+
+# DynamoDB Local (optional)
+DYNAMODB_ENDPOINT=http://localhost:8000
+DYNAMODB_REGION=fakeRegion
+
+# =============================================================================
+# AWS CONFIGURATION
+# =============================================================================
+
+# AWS Credentials (for DynamoDB Local, these are fake credentials)
+AWS_ACCESS_KEY_ID=fakeMyKeyId
+AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
+
+# For production AWS DynamoDB, replace with real credentials:
+# AWS_ACCESS_KEY_ID=your_real_access_key_id
+# AWS_SECRET_ACCESS_KEY=your_real_secret_access_key
+# DYNAMODB_REGION=us-east-1
+# DYNAMODB_ENDPOINT= (leave empty for production AWS)
 ```
 
 #### Environment Variable Management
@@ -214,12 +256,82 @@ NEXT_PUBLIC_APP_VERSION=1.0.0
 Once the API is running, you can access the Swagger documentation at:
 http://localhost:4009/api
 
+### iTunes API Integration
+
+The API includes comprehensive iTunes Search API integration with the following endpoints:
+
+- **General Search**: `GET /api/itunes/search` - Search across all media types
+- **Music Search**: `GET /api/itunes/search/music` - Search for music tracks
+- **Artist Search**: `GET /api/itunes/search/artist` - Search for music artists
+- **Album Search**: `GET /api/itunes/search/album` - Search for music albums
+- **Podcast Search**: `GET /api/itunes/search/podcast` - Search for podcasts
+- **Movie Search**: `GET /api/itunes/search/movie` - Search for movies
+- **TV Show Search**: `GET /api/itunes/search/tvShow` - Search for TV shows
+
+For detailed API documentation, see [ITUNES_API.md](packages/api/ITUNES_API.md).
+
+## 🗄️ Database Setup
+
+### DynamoDB Local
+
+The project includes DynamoDB Local for development:
+
+```bash
+# Start DynamoDB local
+docker-compose up -d
+
+# Access DynamoDB at http://localhost:8000
+```
+
+#### Credential Configuration
+
+Before you can access DynamoDB programmatically or through the AWS Command Line Interface (AWS CLI), you must configure your credentials to enable authorization for your applications. Downloadable DynamoDB requires any credentials to work, as shown in the following example.
+
+**Required Credentials:**
+
+The project uses AWS credentials for DynamoDB access. For local development with DynamoDB Local, fake credentials are used and configured via environment variables in the `.env` file:
+
+- **AWS Access Key ID**: `fakeMyKeyId` (set via `AWS_ACCESS_KEY_ID`)
+- **AWS Secret Access Key**: `fakeSecretAccessKey` (set via `AWS_SECRET_ACCESS_KEY`)
+- **Default Region Name**: `fakeRegion` (set via `DYNAMODB_REGION`)
+
+For AWS CLI access to DynamoDB Local, you can use the `aws configure` command:
+
+```bash
+aws configure
+```
+
+When prompted, enter the following values:
+
+- AWS Access Key ID: `fakeMyKeyId`
+- AWS Secret Access Key: `fakeSecretAccessKey`
+- Default region name: `fakeRegion`
+- Default output format: `json`
+
+For more information, see [Using the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html).
+
+**Features:**
+
+- **Local Development**: No AWS account required
+- **Data Persistence**: Data stored in `./docker/dynamodb/`
+- **Web Interface**: Access via http://localhost:8000
+- **Shared Database**: Uses `-sharedDb` flag for single database instance
+
 ## 🚀 Deployment
 
 ### Build for Production
 
 ```bash
 pnpm build
+```
+
+### Docker Deployment
+
+For production deployment with DynamoDB:
+
+```bash
+# Build and start all services
+docker-compose up -d
 ```
 
 ## 📄 License

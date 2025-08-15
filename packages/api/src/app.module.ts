@@ -7,6 +7,7 @@ import { ItunesController } from "./controllers/itunes.controller";
 
 import { AppService } from "./app.service";
 import { ItunesService } from "./services/itunes.service";
+import { DynamoDBService } from "./services/dynamodb.service";
 
 import configuration from "./config/configuration";
 
@@ -20,6 +21,6 @@ import configuration from "./config/configuration";
     HttpModule,
   ],
   controllers: [AppController, ItunesController],
-  providers: [AppService, ItunesService],
+  providers: [AppService, ItunesService, DynamoDBService],
 })
 export class AppModule {}

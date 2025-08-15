@@ -4,7 +4,7 @@ This document describes the iTunes Search API integration for the Tune8 API.
 
 ## Overview
 
-The iTunes Search API integration provides endpoints to search for content across all media types in the iTunes Store using the official [iTunes Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html).
+The iTunes Search API integration provides endpoints to search for content across all media types in the iTunes Store using the official [iTunes Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html). The API includes DynamoDB integration for storing and retrieving search results.
 
 ## Configuration
 
@@ -13,6 +13,10 @@ The API is configurable through environment variables:
 - `PORT`: Server port (default: 4009)
 - `API_PREFIX`: API prefix for all endpoints (default: "api")
 - `FRONTEND_URL`: Frontend URL for CORS (default: "http://localhost:4009")
+- `DYNAMODB_ENDPOINT`: DynamoDB endpoint (default: "http://localhost:8000")
+- `DYNAMODB_REGION`: AWS region for DynamoDB (default: "fakeRegion")
+- `AWS_ACCESS_KEY_ID`: AWS access key ID (default: "fakeMyKeyId")
+- `AWS_SECRET_ACCESS_KEY`: AWS secret access key (default: "fakeSecretAccessKey")
 
 ## Endpoints
 
@@ -173,9 +177,12 @@ All endpoints return a JSON response with the following structure:
       "longDescription": "Long description...",
       "shortDescription": "Short description..."
     }
-  ]
+  ],
+  "searchId": "unique-search-id-12345"
 }
 ```
+
+**Note:** The `searchId` field is included when DynamoDB storage is successful and can be used to retrieve cached results.
 
 ## Media Types
 
@@ -251,6 +258,15 @@ The API includes comprehensive input validation:
 - **Language**: Must be "en_us" or "ja_jp"
 - **Version**: Must be 1 or 2
 - **Explicit**: Must be "Yes" or "No"
+
+## DynamoDB Integration
+
+The API includes DynamoDB integration for storing and retrieving search results:
+
+- **Automatic Storage**: All search results are automatically stored in DynamoDB
+- **Search ID**: Each search generates a unique search ID for result retrieval
+- **Graceful Degradation**: If DynamoDB is unavailable, the API continues to function without storage
+- **Caching**: Stored results can be retrieved using the search ID
 
 ## Rate Limiting
 
@@ -330,3 +346,24 @@ npm run format
 # Lint code
 npm run lint
 ```
+
+## Dependencies
+
+The API uses the following key dependencies:
+
+- **@nestjs/axios**: HTTP client for iTunes API requests
+- **@aws-sdk/client-dynamodb**: AWS DynamoDB client
+- **@aws-sdk/lib-dynamodb**: DynamoDB utilities
+- **class-validator**: Input validation
+- **class-transformer**: Data transformation
+- **@nestjs/swagger**: API documentation
+
+## Architecture
+
+The API follows a modular architecture:
+
+- **Controllers**: Handle HTTP requests and responses
+- **Services**: Business logic and external API integration
+- **DTOs**: Data transfer objects for validation and documentation
+- **Configuration**: Environment-based configuration management
+- **DynamoDB Service**: Database operations and caching

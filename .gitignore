@@ -99,3 +99,5 @@ lerna-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+
+shared-local-instance.db
