@@ -5,6 +5,13 @@ import { Search, Menu, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import {
   Sidebar,
@@ -132,6 +139,7 @@ interface HomePageProps {
 export default function HomePage({ params }: HomePageProps) {
   const { locale } = params;
   const [searchQuery, setSearchQuery] = useState("");
+  const [contentType, setContentType] = useState("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -173,18 +181,37 @@ export default function HomePage({ params }: HomePageProps) {
             </Button>
 
             <div className="flex-1 min-w-0">
-              <div className="relative max-w-2xl mx-auto lg:mx-0">
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-                <Input
-                  type="text"
-                  placeholder={t("common.search")}
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full bg-gray-700 text-white placeholder-gray-400 pl-10 border-gray-600 focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
-                />
+              <div className="flex items-center gap-3 max-w-2xl mx-auto lg:mx-0">
+                <div className="relative flex-1">
+                  <Search
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    size={20}
+                  />
+                  <Input
+                    type="text"
+                    placeholder={t("common.search")}
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full bg-gray-700 text-white placeholder-gray-400 pl-10 border-gray-600 focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
+                  />
+                </div>
+
+                <Select value={contentType} onValueChange={setContentType}>
+                  <SelectTrigger className="w-28 sm:w-32 bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500">
+                    <SelectValue placeholder={t("common.contentType")} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-600 text-white">
+                    <SelectItem value="all">{t("common.contentTypes.all")}</SelectItem>
+                    <SelectItem value="album">{t("common.contentTypes.album")}</SelectItem>
+                    <SelectItem value="artist">{t("common.contentTypes.artist")}</SelectItem>
+                    <SelectItem value="movie">{t("common.contentTypes.movie")}</SelectItem>
+                    <SelectItem value="music track">
+                      {t("common.contentTypes.musicTrack")}
+                    </SelectItem>
+                    <SelectItem value="podcast">{t("common.contentTypes.podcast")}</SelectItem>
+                    <SelectItem value="tvShow">{t("common.contentTypes.tvShow")}</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

@@ -16,6 +16,16 @@ const resources = {
         notFound: "Not Found",
         search: "Search",
         close: "Close",
+        contentType: "Type",
+        contentTypes: {
+          all: "All",
+          album: "Album",
+          artist: "Artist",
+          movie: "Movie",
+          musicTrack: "Music Track",
+          podcast: "Podcast",
+          tvShow: "TV Show",
+        },
       },
       // Error page
       error: {
@@ -64,6 +74,16 @@ const resources = {
         notFound: "غير موجود",
         search: "بحث",
         close: "إغلاق",
+        contentType: "النوع",
+        contentTypes: {
+          all: "الكل",
+          album: "ألبوم",
+          artist: "فنان",
+          movie: "فيلم",
+          musicTrack: "مقطع موسيقي",
+          podcast: "بودكاست",
+          tvShow: "مسلسل تلفزيوني",
+        },
       },
       // Error page
       error: {
