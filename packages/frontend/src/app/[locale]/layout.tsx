@@ -12,9 +12,14 @@ interface LocaleLayoutProps {
 export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = params;
   const direction = getDirection(locale);
+  const isRTL = direction === "rtl";
 
   return (
-    <div lang={locale} dir={direction} className={direction === "rtl" ? "rtl" : "ltr"}>
+    <div
+      lang={locale}
+      dir={direction}
+      className={`${direction === "rtl" ? "rtl" : "ltr"} ${isRTL ? "font-arabic" : ""}`}
+    >
       <I18nProvider locale={locale}>{children}</I18nProvider>
     </div>
   );
