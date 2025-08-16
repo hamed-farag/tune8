@@ -1,8 +1,8 @@
 export default () => ({
-  port: parseInt(process.env.PORT, 10) || 3001,
+  port: parseInt(process.env.PORT, 10) || 4009,
 
   cors: {
-    frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000",
+    frontendUrl: process.env.FRONTEND_URL || "http://localhost:4010",
   },
 
   api: {

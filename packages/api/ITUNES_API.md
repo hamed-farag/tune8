@@ -285,25 +285,25 @@ The API is configured with CORS support for the frontend application, allowing c
 ### Search for Jack Johnson music
 
 ```bash
-curl "http://localhost:3001/api/itunes/search/music?term=jack+johnson&limit=5"
+curl "http://localhost:4009/api/itunes/search/music?term=jack+johnson&limit=5"
 ```
 
 ### Search for movies with specific country
 
 ```bash
-curl "http://localhost:3001/api/itunes/search?term=inception&media=movie&country=US&limit=10"
+curl "http://localhost:4009/api/itunes/search?term=inception&media=movie&country=US&limit=10"
 ```
 
 ### Search for podcasts
 
 ```bash
-curl "http://localhost:3001/api/itunes/search/podcast?term=serial&limit=5"
+curl "http://localhost:4009/api/itunes/search/podcast?term=serial&limit=5"
 ```
 
 ### Search with all parameters
 
 ```bash
-curl "http://localhost:3001/api/itunes/search?term=jack+johnson&media=music&entity=musicTrack&country=US&limit=25&lang=en_us&version=2&explicit=Yes"
+curl "http://localhost:4009/api/itunes/search?term=jack+johnson&media=music&entity=musicTrack&country=US&limit=25&lang=en_us&version=2&explicit=Yes"
 ```
 
 ## Swagger Documentation
@@ -311,7 +311,7 @@ curl "http://localhost:3001/api/itunes/search?term=jack+johnson&media=music&enti
 When the API is running, you can access the interactive Swagger documentation at:
 
 ```
-http://localhost:3001/api
+http://localhost:4009/api
 ```
 
 This provides a complete interactive interface for testing all iTunes Search API endpoints with proper parameter validation and response examples.
