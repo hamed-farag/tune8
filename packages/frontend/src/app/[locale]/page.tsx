@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, ChevronLeft, ChevronRight, Menu } from "lucide-react";
+import { Search, Menu, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import {
   Sidebar,
   PodcastCard,
@@ -191,87 +191,85 @@ export default function HomePage({ params }: HomePageProps) {
         </header>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full">
-            <main className="p-4 sm:p-6 pb-20 max-w-full">
-              {/* Top Podcasts Section */}
-              <section className="mb-6 sm:mb-8">
-                <div className="flex items-center justify-between mb-3 sm:mb-4">
-                  <h2 className="text-lg sm:text-xl font-semibold">{t("podcasts.title")}</h2>
-                  <div className="flex space-x-1 sm:space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-gray-700 h-8 w-8 sm:h-10 sm:w-10"
-                    >
-                      <ChevronLeft size={16} className="sm:w-5 sm:h-5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-gray-700 h-8 w-8 sm:h-10 sm:w-10"
-                    >
-                      <ChevronRight size={16} className="sm:w-5 sm:h-5" />
-                    </Button>
-                  </div>
+        <div className="flex-1 overflow-y-auto">
+          <main className="p-4 sm:p-6 pb-20 max-w-full">
+            {/* Top Podcasts Section */}
+            <section className="mb-6 sm:mb-8">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h2 className="text-lg sm:text-xl font-semibold">{t("podcasts.title")}</h2>
+              </div>
+
+              <div className="relative w-full group">
+                {/* Scroll indicator */}
+                <div
+                  className={`absolute top-0 bottom-0 z-10 w-8 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity ${
+                    isRTL
+                      ? "left-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"
+                      : "right-0 bg-gradient-to-l from-gray-900 via-gray-900/80 to-transparent"
+                  }`}
+                >
+                  {isRTL ? (
+                    <ChevronLeft className="w-5 h-5 text-gray-400" />
+                  ) : (
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                  )}
                 </div>
 
-                <div className="relative">
-                  <div className="flex space-x-3 sm:space-x-6 overflow-x-auto pb-4 scrollbar-hide">
-                    <div className="flex space-x-3 sm:space-x-6">
-                      {isLoading
-                        ? // Show skeleton loading
-                          Array.from({ length: 6 }).map((_, index) => (
-                            <PodcastCardSkeleton key={index} />
-                          ))
-                        : // Show actual content
-                          mockPodcasts.map(podcast => (
-                            <PodcastCard
-                              key={podcast.id}
-                              id={podcast.id}
-                              title={podcast.title}
-                              artist={podcast.artist}
-                              imageUrl={podcast.imageUrl}
-                              isPlaceholder={podcast.isPlaceholder}
-                            />
-                          ))}
-                    </div>
-                  </div>
+                <div
+                  className="flex space-x-3 sm:space-x-6 overflow-x-auto pb-4 scrollbar-hide w-full scroll-smooth"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  {isLoading
+                    ? // Show skeleton loading
+                      Array.from({ length: 12 }).map((_, index) => (
+                        <PodcastCardSkeleton key={index} />
+                      ))
+                    : // Show actual content
+                      [...mockPodcasts].map((podcast, index) => (
+                        <PodcastCard
+                          key={`${podcast.id}-${index}`}
+                          id={podcast.id}
+                          title={podcast.title}
+                          artist={podcast.artist}
+                          imageUrl={podcast.imageUrl}
+                          isPlaceholder={podcast.isPlaceholder}
+                        />
+                      ))}
                 </div>
-              </section>
+              </div>
+            </section>
 
-              {/* Top Episodes Section */}
-              <section className="w-full">
-                <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
-                  {t("podcasts.episodes")}
-                </h2>
-                <div className="w-full">
-                  <div
-                    className={cn(
-                      "grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-                      isRTL && "justify-items-end"
-                    )}
-                  >
-                    {isLoading
-                      ? // Show skeleton loading
-                        Array.from({ length: 8 }).map((_, index) => (
-                          <EpisodeCardSkeleton key={index} />
-                        ))
-                      : // Show actual content
-                        mockEpisodes.map(episode => (
-                          <EpisodeCard
-                            key={episode.id}
-                            id={episode.id}
-                            title={episode.title}
-                            podcastName={episode.podcastName}
-                            imageUrl={episode.imageUrl}
-                          />
-                        ))}
-                  </div>
+            {/* Top Episodes Section */}
+            <section className="w-full">
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+                {t("podcasts.episodes")}
+              </h2>
+              <div className="w-full">
+                <div
+                  className={cn(
+                    "grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+                    isRTL && "justify-items-end"
+                  )}
+                >
+                  {isLoading
+                    ? // Show skeleton loading
+                      Array.from({ length: 8 }).map((_, index) => (
+                        <EpisodeCardSkeleton key={index} />
+                      ))
+                    : // Show actual content
+                      mockEpisodes.map(episode => (
+                        <EpisodeCard
+                          key={episode.id}
+                          id={episode.id}
+                          title={episode.title}
+                          podcastName={episode.podcastName}
+                          imageUrl={episode.imageUrl}
+                        />
+                      ))}
                 </div>
-              </section>
-            </main>
-          </ScrollArea>
+              </div>
+            </section>
+          </main>
         </div>
       </div>
     </div>
