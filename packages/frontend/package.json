@@ -4,8 +4,8 @@
   "description": "Tune8 Next.js Frontend",
   "private": true,
   "scripts": {
-    "start": "next start -p ${FRONTEND_PORT:-3000}",
-    "start:dev": "next dev -p ${FRONTEND_PORT:-3000}",
+    "start": "next start -p ${FRONTEND_PORT:-4010}",
+    "start:dev": "next dev -p ${FRONTEND_PORT:-4010}",
     "build": "NODE_ENV=production next build",
     "lint": "next lint",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
@@ -20,10 +20,12 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.1",
+    "i18next": "^25.3.6",
     "lucide-react": "^0.539.0",
     "next": "^14.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-i18next": "^15.6.1",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
