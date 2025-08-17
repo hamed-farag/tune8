@@ -45,6 +45,9 @@ const resources = {
         defaultMessage: "An unexpected error occurred.",
         tryAgain: "Try again",
         goHome: "Go Home",
+        oops: "Oops! Something went wrong",
+        retrying: "Retrying...",
+        reloadPage: "Reload Page",
       },
       // Home page
       home: {
@@ -114,6 +117,9 @@ const resources = {
         defaultMessage: "حدث خطأ غير متوقع.",
         tryAgain: "حاول مرة أخرى",
         goHome: "العودة للرئيسية",
+        oops: "عذراً! حدث خطأ ما",
+        retrying: "جاري المحاولة...",
+        reloadPage: "إعادة تحميل الصفحة",
       },
       // Home page
       home: {
