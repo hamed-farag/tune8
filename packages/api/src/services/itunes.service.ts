@@ -36,12 +36,6 @@ export class ItunesService {
       if (searchParams.country) {
         queryParams.append("country", searchParams.country);
       }
-      if (searchParams.media) {
-        queryParams.append("media", searchParams.media);
-      }
-      if (searchParams.entity) {
-        queryParams.append("entity", searchParams.entity);
-      }
       if (searchParams.attribute) {
         queryParams.append("attribute", searchParams.attribute);
       }
@@ -70,23 +64,9 @@ export class ItunesService {
         })
       );
 
-      // Determine search type based on parameters
-      let searchType = "generic";
-      if (searchParams.media === "music") {
-        if (searchParams.entity === "musicTrack") {
-          searchType = "music";
-        } else if (searchParams.entity === "musicArtist") {
-          searchType = "artist";
-        } else if (searchParams.entity === "album") {
-          searchType = "album";
-        }
-      } else if (searchParams.media === "podcast") {
-        searchType = "podcast";
-      } else if (searchParams.media === "movie") {
-        searchType = "movie";
-      } else if (searchParams.media === "tvShow") {
-        searchType = "tvshow";
-      }
+      // Determine search type based on the calling method
+      const searchType = "generic";
+      // This will be overridden by the specific search methods
 
       // Store results in DynamoDB
       let searchId: string | null = null;
@@ -110,10 +90,32 @@ export class ItunesService {
       }
 
       // Return results with search ID (if available)
+      const finalResults = storedResults || response.data;
+
+      // If we have stored results, we need to flatten the structure
+      if (
+        storedResults &&
+        storedResults.results &&
+        typeof storedResults.results === "object" &&
+        "results" in storedResults.results
+      ) {
+        // The stored results have a nested structure, flatten it
+        return {
+          resultCount: storedResults.results.resultCount || finalResults.resultCount,
+          results: storedResults.results.results || finalResults.results,
+          searchId: searchId || null,
+          createdAt: storedResults.createdAt,
+          searchTerm: storedResults.searchTerm,
+          searchType: storedResults.searchType,
+          timestamp: storedResults.timestamp,
+          searchParams: storedResults.searchParams,
+        } as any; // Type assertion to handle additional properties
+      }
+
       return {
-        ...(storedResults || response.data),
+        ...finalResults,
         searchId: searchId || null,
-      };
+      } as any; // Type assertion to handle additional properties
     } catch (error) {
       if (error.response) {
         // iTunes API returned an error response
@@ -140,8 +142,6 @@ export class ItunesService {
   async searchMusic(term: string, limit = 25): Promise<ItunesMusicSearchResult> {
     const result = await this.search({
       term,
-      media: "music",
-      entity: "musicTrack",
       limit,
     });
     return result as ItunesMusicSearchResult;
@@ -150,8 +150,6 @@ export class ItunesService {
   async searchArtist(term: string, limit = 25): Promise<ItunesArtistSearchResult> {
     const result = await this.search({
       term,
-      media: "music",
-      entity: "musicArtist",
       limit,
     });
     return result as ItunesArtistSearchResult;
@@ -160,8 +158,6 @@ export class ItunesService {
   async searchAlbum(term: string, limit = 25): Promise<ItunesAlbumSearchResult> {
     const result = await this.search({
       term,
-      media: "music",
-      entity: "album",
       limit,
     });
     return result as ItunesAlbumSearchResult;
@@ -170,7 +166,6 @@ export class ItunesService {
   async searchPodcast(term: string, limit = 25): Promise<ItunesPodcastSearchResult> {
     const result = await this.search({
       term,
-      media: "podcast",
       limit,
     });
     return result as ItunesPodcastSearchResult;
@@ -179,7 +174,6 @@ export class ItunesService {
   async searchMovie(term: string, limit = 25): Promise<ItunesMovieSearchResult> {
     const result = await this.search({
       term,
-      media: "movie",
       limit,
     });
     return result as ItunesMovieSearchResult;
@@ -188,7 +182,6 @@ export class ItunesService {
   async searchTvShow(term: string, limit = 25): Promise<ItunesTvShowSearchResult> {
     const result = await this.search({
       term,
-      media: "tvShow",
       limit,
     });
     return result as ItunesTvShowSearchResult;

@@ -15,7 +15,11 @@ const resources = {
         error: "Error",
         notFound: "Not Found",
         search: "Search",
+        searching: "Searching...",
         close: "Close",
+        clearError: "Clear Error",
+        clearResults: "Clear Results",
+        browseAll: "Browse All",
         contentType: "Type",
         contentTypes: {
           all: "All",
@@ -26,6 +30,13 @@ const resources = {
           podcast: "Podcast",
           tvShow: "TV Show",
         },
+      },
+      // Search
+      search: {
+        results: "Search Results",
+        startSearching: "Start searching to discover content",
+        noResults: "No results found",
+        searchPlaceholder: "Search for music, podcasts, movies...",
       },
       // Error page
       error: {
@@ -73,7 +84,11 @@ const resources = {
         error: "خطأ",
         notFound: "غير موجود",
         search: "بحث",
+        searching: "جاري البحث...",
         close: "إغلاق",
+        clearError: "مسح الخطأ",
+        clearResults: "مسح النتائج",
+        browseAll: "تصفح الكل",
         contentType: "النوع",
         contentTypes: {
           all: "الكل",
@@ -84,6 +99,13 @@ const resources = {
           podcast: "بودكاست",
           tvShow: "مسلسل تلفزيوني",
         },
+      },
+      // Search
+      search: {
+        results: "نتائج البحث",
+        startSearching: "ابدأ البحث لاكتشاف المحتوى",
+        noResults: "لم يتم العثور على نتائج",
+        searchPlaceholder: "ابحث عن الموسيقى، البودكاست، الأفلام...",
       },
       // Error page
       error: {
