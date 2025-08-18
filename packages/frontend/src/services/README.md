@@ -14,8 +14,8 @@ The service is organized into three main modules:
 
 The service integrates with the following frontend components:
 
-- **SearchResultsGrid** - Displays search results with appropriate card components
-- **ContentGrid** - Shows content based on selected type with skeleton loaders
+- **SearchResultsGrid** - Displays search results with appropriate card components (uses `useItunesData`)
+- **ContentGrid** - Shows random content based on selected type with skeleton loaders (uses `useRandomItunesData`)
 - **ContentTypeSelector** - Allows users to filter by specific media types
 - **Card Components** - Specialized cards for each content type (PodcastCard, ArtistCard, AlbumCard, MovieCard, TvShowCard, MusicTrackCard)
 - **Skeleton Components** - Loading placeholders for each content type
@@ -30,6 +30,7 @@ The service integrates with the following frontend components:
 - **Tree-shakable** - only import what you need
 - **Backward compatibility** with legacy service object
 - **Advanced search functionality** with debouncing and intelligent fallback
+- **Random content display** with curated search terms for ContentGrid
 - **Multi-content type support** (podcasts, music, artists, albums, movies, TV shows)
 - **RTL language support** for Arabic and other right-to-left languages
 - **Responsive design** optimized for mobile and desktop usage
@@ -58,21 +59,32 @@ const results = await searchItunes({
 ### Using React Hooks
 
 ```typescript
-import { useItunes, useItunesPodcast } from '../hooks/useItunes';
+import { useItunesData, useRandomItunesData } from '../hooks/useItunesData';
 
-function MyComponent() {
-  const { data, loading, error, searchPodcast } = useItunesPodcast();
-
-  const handleSearch = async () => {
-    await searchPodcast('serial', 10);
-  };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+// For search functionality
+function SearchComponent() {
+  const { items, isLoading, error, fetchData } = useItunesData('podcast', 'serial');
 
   return (
     <div>
-      {data?.results.map(podcast => (
+      {isLoading && <div>Loading...</div>}
+      {error && <div>Error: {error}</div>}
+      {items.map(item => (
+        <div key={item.trackId}>{item.trackName}</div>
+      ))}
+    </div>
+  );
+}
+
+// For random content display (ContentGrid)
+function ContentGridComponent() {
+  const { podcasts, isLoading, error, fetchData } = useRandomItunesData('podcast');
+
+  return (
+    <div>
+      {isLoading && <div>Loading...</div>}
+      {error && <div>Error: {error}</div>}
+      {podcasts.map(podcast => (
         <div key={podcast.trackId}>{podcast.trackName}</div>
       ))}
     </div>
@@ -89,7 +101,7 @@ import { useDebounce } from '../hooks/useDebounce';
 function SearchComponent() {
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedQuery = useDebounce(searchQuery, 500);
-  const { data, loading, error, refresh } = useItunesData(debouncedQuery, 'podcast');
+  const { items, isLoading, error } = useItunesData('podcast', debouncedQuery);
 
   return (
     <div>
@@ -98,11 +110,11 @@ function SearchComponent() {
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Search podcasts..."
       />
-      {loading && <div>Searching...</div>}
-      {error && <div>Error: {error.message}</div>}
-      {data && (
+      {isLoading && <div>Searching...</div>}
+      {error && <div>Error: {error}</div>}
+      {items && (
         <div>
-          {data.results.map(item => (
+          {items.map(item => (
             <div key={item.trackId}>{item.trackName}</div>
           ))}
         </div>
@@ -205,22 +217,57 @@ const date = formatReleaseDate("2023-01-15T00:00:00Z"); // "January 15, 2023"
 
 ## React Hooks
 
-### `useItunes<T>()`
+### Hook Differences
 
-Generic hook for iTunes searches. Returns loading state, error handling, and search methods.
+The service provides two main hooks with distinct purposes:
 
-### Specialized Hooks
+#### `useItunesData(contentType: string, searchQuery?: string)`
 
-- `useItunesMusic()` - For music searches
-- `useItunesArtist()` - For artist searches
-- `useItunesAlbum()` - For album searches
-- `useItunesPodcast()` - For podcast searches
-- `useItunesMovie()` - For movie searches
-- `useItunesTvShow()` - For TV show searches
+- **Purpose**: Search functionality with user-provided queries
+- **Use Case**: SearchResultsGrid component, user-initiated searches
+- **Behavior**: Only fetches data when `searchQuery` is provided and not empty
+- **Returns**: Single `items` array with search results
 
-### Search Integration Hooks
+#### `useRandomItunesData(contentType: string)`
 
-- `useItunesData()` - Main hook for search functionality with debouncing and fallback
+- **Purpose**: Display random curated content for ContentGrid
+- **Use Case**: ContentGrid component, initial page load content
+- **Behavior**: Always fetches data using curated search terms, regardless of user input
+- **Returns**: Separate arrays for each content type (`podcasts`, `musicTracks`, etc.)
+
+### `useItunesData(contentType: string, searchQuery?: string)`
+
+Main hook for search functionality. Returns search results, loading state, and error handling.
+
+**Parameters:**
+
+- `contentType`: The type of content to search for ('podcast', 'artist', 'album', 'movie', 'tvShow', 'music track')
+- `searchQuery`: Optional search term. If not provided, uses fallback search terms
+
+**Returns:**
+
+- `items`: Array of search results
+- `isLoading`: Loading state
+- `error`: Error message if any
+- `fetchData`: Function to manually trigger search
+
+### `useRandomItunesData(contentType: string)`
+
+Hook for displaying random content (used by ContentGrid). Automatically fetches random content based on content type.
+
+**Parameters:**
+
+- `contentType`: The type of content to display ('podcast', 'artist', 'album', 'movie', 'tvShow', 'music track', 'all')
+
+**Returns:**
+
+- `podcasts`, `musicTracks`, `artists`, `albums`, `movies`, `tvShows`: Arrays of content for each type
+- `isLoading`: Loading state
+- `error`: Error message if any
+- `fetchData`: Function to manually refresh content
+
+### Utility Hooks
+
 - `useDebounce()` - Custom hook for debouncing search input (500ms delay)
 - `useI18n()` - Internationalization hook for RTL support and translations
 
@@ -305,6 +352,13 @@ const podcasts = await itunesService.searchPodcast("serial", 10);
 
 ## Recent Updates
 
+### Hook Architecture
+
+- **Consolidated**: All hooks are now in `useItunesData.ts` with two main hooks:
+  - `useItunesData()` - For search functionality with user queries
+  - `useRandomItunesData()` - For ContentGrid with random curated content
+- **Removed**: Legacy `useItunes.ts` and specialized hooks (`useItunesPodcast`, etc.)
+
 ### Component Changes
 
 - **Removed**: `EpisodesGrid`, `EpisodeCard`, `EpisodeCardSkeleton` components
@@ -317,6 +371,7 @@ The service now includes advanced search functionality:
 
 - **Debounced Search**: 500ms delay to prevent excessive API calls
 - **Intelligent Fallback**: Curated search terms when no query is provided
+- **Random Content**: Separate hook for ContentGrid with curated search terms
 - **Multi-content Support**: All media types (podcasts, music, artists, albums, movies, TV shows)
 - **Enhanced UX**: Loading states, error handling, and visual feedback
 - **RTL Support**: Full support for right-to-left languages
