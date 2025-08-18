@@ -87,20 +87,12 @@ When no search query is provided, the system uses curated search terms for each 
 
 The search functionality integrates with the following iTunes API endpoints:
 
-- `/api/itunes/search` - Generic search across all media types
 - `/api/itunes/search/podcast` - Podcast search
 - `/api/itunes/search/music` - Music track search
 - `/api/itunes/search/artist` - Artist search
 - `/api/itunes/search/album` - Album search
 - `/api/itunes/search/movie` - Movie search
 - `/api/itunes/search/tvshow` - TV show search
-
-**Advanced Search Functions** (available but not currently used in main UI):
-
-- `searchMusicAdvanced()` - Music search with country, language, explicit content options
-- `searchPodcastAdvanced()` - Podcast search with advanced parameters
-- `searchMovieAdvanced()` - Movie search with advanced parameters
-- `searchTvShowAdvanced()` - TV show search with advanced parameters
 
 ### Search Flow
 
@@ -167,3 +159,12 @@ The search functionality uses environment-based configuration:
 - **Default API**: `http://localhost:4009` (development)
 - **App Name**: Configurable via `NEXT_PUBLIC_APP_NAME`
 - **App Version**: Configurable via `NEXT_PUBLIC_APP_VERSION`
+
+## Related Documentation
+
+For more information about related features and components:
+
+- **[Frontend Services README](src/services/README.md)** - Detailed API service documentation
+- **[Arabic Font Setup](ARABIC_FONT_SETUP.md)** - RTL language support configuration
+- **[API Documentation](../api/ITUNES_API.md)** - Backend API endpoints and integration
+- **[Main Project README](../../README.md)** - Complete project overview and setup

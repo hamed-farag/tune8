@@ -1,14 +1,11 @@
 import { useState, useCallback } from "react";
 import {
-  searchItunes,
   searchMusic as searchMusicApi,
   searchArtist as searchArtistApi,
   searchAlbum as searchAlbumApi,
   searchPodcast as searchPodcastApi,
   searchMovie as searchMovieApi,
   searchTvShow as searchTvShowApi,
-  ItunesSearchParams,
-  ItunesGenericSearchResult,
   ItunesMusicSearchResult,
   ItunesArtistSearchResult,
   ItunesAlbumSearchResult,
@@ -25,7 +22,6 @@ interface UseItunesState<T> {
 }
 
 interface UseItunesReturn<T> extends UseItunesState<T> {
-  search: (params: ItunesSearchParams) => Promise<void>;
   searchMusic: (term: string, limit?: number) => Promise<void>;
   searchArtist: (term: string, limit?: number) => Promise<void>;
   searchAlbum: (term: string, limit?: number) => Promise<void>;
@@ -36,7 +32,7 @@ interface UseItunesReturn<T> extends UseItunesState<T> {
   clearData: () => void;
 }
 
-export function useItunes<T = ItunesGenericSearchResult>(): UseItunesReturn<T> {
+export function useItunes<T = ItunesMusicSearchResult>(): UseItunesReturn<T> {
   const [state, setState] = useState<UseItunesState<T>>({
     data: null,
     loading: false,
@@ -62,19 +58,6 @@ export function useItunes<T = ItunesGenericSearchResult>(): UseItunesReturn<T> {
   const clearData = useCallback(() => {
     setState(prev => ({ ...prev, data: null }));
   }, []);
-
-  const search = useCallback(
-    async (params: ItunesSearchParams) => {
-      setLoading(true);
-      try {
-        const result = (await searchItunes(params)) as T;
-        setData(result);
-      } catch (error) {
-        setError(error as ItunesApiError);
-      }
-    },
-    [setLoading, setData, setError]
-  );
 
   const searchMusic = useCallback(
     async (term: string, limit = 25) => {
@@ -156,7 +139,6 @@ export function useItunes<T = ItunesGenericSearchResult>(): UseItunesReturn<T> {
 
   return {
     ...state,
-    search,
     searchMusic,
     searchArtist,
     searchAlbum,

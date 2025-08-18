@@ -11,18 +11,8 @@ const resources = {
       },
       // Common
       common: {
-        loading: "Loading...",
-        error: "Error",
-        notFound: "Not Found",
-        search: "Search",
-        searching: "Searching...",
-        close: "Close",
-        clearError: "Clear Error",
-        clearResults: "Clear Results",
-        browseAll: "Browse All",
         contentType: "Type",
         contentTypes: {
-          all: "All",
           album: "Album",
           artist: "Artist",
           movie: "Movie",
@@ -30,13 +20,24 @@ const resources = {
           podcast: "Podcast",
           tvShow: "TV Show",
         },
+        recommendedForYou: "Recommended for you",
       },
       // Search
       search: {
-        results: "Search Results",
         startSearching: "Start searching to discover content",
+        searchDescription:
+          "Type in the search bar above to find your favorite music, podcasts, movies, TV shows, and more.",
+        typeToSearch: "Type to search",
         noResults: "No results found",
-        searchPlaceholder: "Search for music, podcasts, movies...",
+        noResultsDescription:
+          "We couldn't find any content matching your search. Try different keywords or browse our recommendations above.",
+        allResults: "Search Results",
+        podcastResults: "Podcast Results",
+        artistResults: "Artist Results",
+        albumResults: "Album Results",
+        movieResults: "Movie Results",
+        tvShowResults: "TV Show Results",
+        musicTrackResults: "Music Track Results",
       },
       // Error page
       error: {
@@ -48,22 +49,6 @@ const resources = {
         oops: "Oops! Something went wrong",
         retrying: "Retrying...",
         reloadPage: "Reload Page",
-      },
-      // Home page
-      home: {
-        title: "Tune8",
-        description: "Your Music Platform",
-        welcome: "Welcome to Tune8",
-        subtitle: "Discover and enjoy your favorite music",
-      },
-      // Podcasts
-      podcasts: {
-        title: "Podcasts",
-        episodes: "Episodes",
-        duration: "Duration",
-        releaseDate: "Release Date",
-        noPodcasts: "No podcasts found",
-        noEpisodes: "No episodes found",
       },
       // Not Found page
       notFound: {
@@ -83,18 +68,8 @@ const resources = {
       },
       // Common
       common: {
-        loading: "جاري التحميل...",
-        error: "خطأ",
-        notFound: "غير موجود",
-        search: "بحث",
-        searching: "جاري البحث...",
-        close: "إغلاق",
-        clearError: "مسح الخطأ",
-        clearResults: "مسح النتائج",
-        browseAll: "تصفح الكل",
         contentType: "النوع",
         contentTypes: {
-          all: "الكل",
           album: "ألبوم",
           artist: "فنان",
           movie: "فيلم",
@@ -102,13 +77,24 @@ const resources = {
           podcast: "بودكاست",
           tvShow: "مسلسل تلفزيوني",
         },
+        recommendedForYou: "موصى به لك",
       },
       // Search
       search: {
-        results: "نتائج البحث",
         startSearching: "ابدأ البحث لاكتشاف المحتوى",
+        searchDescription:
+          "اكتب في شريط البحث أعلاه للعثور على موسيقاك المفضلة، البودكاست، الأفلام، المسلسلات التلفزيونية، والمزيد.",
+        typeToSearch: "اكتب للبحث",
         noResults: "لم يتم العثور على نتائج",
-        searchPlaceholder: "ابحث عن الموسيقى، البودكاست، الأفلام...",
+        noResultsDescription:
+          "لم نتمكن من العثور على أي محتوى يطابق بحثك. جرب كلمات مفتاحية مختلفة أو تصفح توصياتنا أعلاه.",
+        allResults: "نتائج البحث",
+        podcastResults: "نتائج البودكاست",
+        artistResults: "نتائج الفنانين",
+        albumResults: "نتائج الألبومات",
+        movieResults: "نتائج الأفلام",
+        tvShowResults: "نتائج المسلسلات التلفزيونية",
+        musicTrackResults: "نتائج المقاطع الموسيقية",
       },
       // Error page
       error: {
@@ -120,22 +106,6 @@ const resources = {
         oops: "عذراً! حدث خطأ ما",
         retrying: "جاري المحاولة...",
         reloadPage: "إعادة تحميل الصفحة",
-      },
-      // Home page
-      home: {
-        title: "Tune8",
-        description: "منصة الموسيقى الخاصة بك",
-        welcome: "مرحباً بك في Tune8",
-        subtitle: "اكتشف واستمتع بموسيقاك المفضلة",
-      },
-      // Podcasts
-      podcasts: {
-        title: "البودكاست",
-        episodes: "الحلقات",
-        duration: "المدة",
-        releaseDate: "تاريخ الإصدار",
-        noPodcasts: "لم يتم العثور على بودكاست",
-        noEpisodes: "لم يتم العثور على حلقات",
       },
       // Not Found page
       notFound: {

@@ -87,3 +87,12 @@ The font setup includes:
 - `font-display: swap` for better loading performance
 - Fallback fonts for better compatibility
 - Proper font feature settings for Arabic text rendering
+
+## Related Documentation
+
+For more information about related features and components:
+
+- **[Search Functionality](SEARCH_FUNCTIONALITY.md)** - Search features with RTL support
+- **[Frontend Services README](src/services/README.md)** - API service integration
+- **[API Documentation](../api/ITUNES_API.md)** - Backend API endpoints
+- **[Main Project README](../../README.md)** - Complete project overview

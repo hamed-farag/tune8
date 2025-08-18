@@ -1,8 +1,6 @@
 export { default as Sidebar } from "./Sidebar";
 export { default as PodcastCard } from "./cards/PodcastCard";
-export { default as EpisodeCard } from "./cards/EpisodeCard";
 export { default as PodcastCardSkeleton } from "./cards/PodcastCardSkeleton";
-export { default as EpisodeCardSkeleton } from "./cards/EpisodeCardSkeleton";
 export { default as MusicTrackCardSkeleton } from "./cards/MusicTrackCardSkeleton";
 export { default as ArtistCardSkeleton } from "./cards/ArtistCardSkeleton";
 export { default as AlbumCardSkeleton } from "./cards/AlbumCardSkeleton";
@@ -22,6 +20,6 @@ export { default as Header } from "./Header";
 export { default as ContentTypeSelector } from "./ContentTypeSelector";
 export { default as ErrorDisplay } from "./ErrorDisplay";
 export { default as ContentGrid } from "./ContentGrid";
-export { default as EpisodesGrid } from "./EpisodesGrid";
+export { default as SearchResultsGrid } from "./SearchResultsGrid";
 
 export { default as I18nProvider } from "../I18nProvider";

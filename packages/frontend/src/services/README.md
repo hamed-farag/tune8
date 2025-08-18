@@ -10,6 +10,16 @@ The service is organized into three main modules:
 - **API** (`./api/itunes.api.ts`) - Pure functions for making API calls
 - **Utils** (`./utils/itunes.utils.ts`) - Helper functions for data manipulation and formatting
 
+## Component Integration
+
+The service integrates with the following frontend components:
+
+- **SearchResultsGrid** - Displays search results with appropriate card components
+- **ContentGrid** - Shows content based on selected type with skeleton loaders
+- **ContentTypeSelector** - Allows users to filter by specific media types
+- **Card Components** - Specialized cards for each content type (PodcastCard, ArtistCard, AlbumCard, MovieCard, TvShowCard, MusicTrackCard)
+- **Skeleton Components** - Loading placeholders for each content type
+
 ## Features
 
 - **Modular design** with separate concerns for types, API calls, and utilities
@@ -19,6 +29,10 @@ The service is organized into three main modules:
 - **React hooks** for easy integration with React components
 - **Tree-shakable** - only import what you need
 - **Backward compatibility** with legacy service object
+- **Advanced search functionality** with debouncing and intelligent fallback
+- **Multi-content type support** (podcasts, music, artists, albums, movies, TV shows)
+- **RTL language support** for Arabic and other right-to-left languages
+- **Responsive design** optimized for mobile and desktop usage
 
 ## Quick Start
 
@@ -66,6 +80,38 @@ function MyComponent() {
 }
 ```
 
+### Using Search Functionality
+
+```typescript
+import { useItunesData } from '../hooks/useItunesData';
+import { useDebounce } from '../hooks/useDebounce';
+
+function SearchComponent() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const debouncedQuery = useDebounce(searchQuery, 500);
+  const { data, loading, error, refresh } = useItunesData(debouncedQuery, 'podcast');
+
+  return (
+    <div>
+      <input
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search podcasts..."
+      />
+      {loading && <div>Searching...</div>}
+      {error && <div>Error: {error.message}</div>}
+      {data && (
+        <div>
+          {data.results.map(item => (
+            <div key={item.trackId}>{item.trackName}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
 ### Using Utility Functions
 
 ```typescript
@@ -85,20 +131,7 @@ const price = formatPrice(0.99, "USD"); // "$0.99"
 
 ### Core API Functions
 
-#### `searchItunes(params: ItunesSearchParams)`
-
-Generic search across all media types.
-
-```typescript
-const results = await searchItunes({
-  term: "search term",
-  country: "US",
-  media: "all",
-  limit: 50,
-  lang: "en_us",
-  explicit: "Yes",
-});
-```
+The frontend uses specific search endpoints for each media type rather than the generic search endpoint:
 
 #### `searchMusic(term: string, limit?: number)`
 
@@ -123,27 +156,6 @@ Search specifically for movies.
 #### `searchTvShow(term: string, limit?: number)`
 
 Search specifically for TV shows.
-
-### Advanced API Functions
-
-#### `searchMusicAdvanced(term: string, options)`
-
-Search for music with advanced parameters.
-
-```typescript
-const results = await searchMusicAdvanced("jack johnson", {
-  limit: 50,
-  country: "US",
-  lang: "en_us",
-  explicit: "Yes",
-});
-```
-
-Similar advanced functions are available for:
-
-- `searchPodcastAdvanced()`
-- `searchMovieAdvanced()`
-- `searchTvShowAdvanced()`
 
 ### Utility Functions
 
@@ -205,6 +217,12 @@ Generic hook for iTunes searches. Returns loading state, error handling, and sea
 - `useItunesPodcast()` - For podcast searches
 - `useItunesMovie()` - For movie searches
 - `useItunesTvShow()` - For TV show searches
+
+### Search Integration Hooks
+
+- `useItunesData()` - Main hook for search functionality with debouncing and fallback
+- `useDebounce()` - Custom hook for debouncing search input (500ms delay)
+- `useI18n()` - Internationalization hook for RTL support and translations
 
 ## Error Handling
 
@@ -284,3 +302,31 @@ const podcasts = await searchPodcast("serial", 10);
 import { itunesService } from "../services";
 const podcasts = await itunesService.searchPodcast("serial", 10);
 ```
+
+## Recent Updates
+
+### Component Changes
+
+- **Removed**: `EpisodesGrid`, `EpisodeCard`, `EpisodeCardSkeleton` components
+- **Added**: `SearchResultsGrid` component for displaying search results
+- **Updated**: `ContentGrid` and `ContentTypeSelector` with enhanced functionality
+
+### Search Functionality
+
+The service now includes advanced search functionality:
+
+- **Debounced Search**: 500ms delay to prevent excessive API calls
+- **Intelligent Fallback**: Curated search terms when no query is provided
+- **Multi-content Support**: All media types (podcasts, music, artists, albums, movies, TV shows)
+- **Enhanced UX**: Loading states, error handling, and visual feedback
+- **RTL Support**: Full support for right-to-left languages
+
+For detailed information about the search functionality, see [SEARCH_FUNCTIONALITY.md](../SEARCH_FUNCTIONALITY.md).
+
+## Related Documentation
+
+This service integrates with other parts of the frontend application. For more information, see:
+
+- **[SEARCH_FUNCTIONALITY.md](../SEARCH_FUNCTIONALITY.md)** - Comprehensive guide to the search functionality
+- **[ARABIC_FONT_SETUP.md](../ARABIC_FONT_SETUP.md)** - RTL language support and Arabic font configuration
+- **[Main Project README](../../../README.md)** - Overview of the entire Tune8 project

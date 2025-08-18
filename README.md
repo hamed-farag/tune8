@@ -62,6 +62,19 @@ This will start:
 - **Frontend**: http://localhost:4010
 - **DynamoDB Local**: http://localhost:8000 (if using Docker)
 
+### Search Functionality
+
+The frontend includes advanced search functionality with:
+
+- **Real-time search** with 500ms debouncing
+- **Intelligent fallback** to curated search terms
+- **Multi-content type support** (podcasts, music, artists, albums, movies, TV shows)
+- **Enhanced visual feedback** with loading states
+- **RTL language support** (Arabic)
+- **Responsive design** for mobile and desktop
+
+For detailed information about the search functionality, see [SEARCH_FUNCTIONALITY.md](packages/frontend/SEARCH_FUNCTIONALITY.md).
+
 ### Individual Commands
 
 #### API (NestJS)
@@ -134,6 +147,9 @@ docker-compose down
 - **HTTP Client**: Axios
 - **Port**: 4010 (configurable via FRONTEND_PORT)
 - **Configuration**: dotenv for environment variables
+- **Search**: Real-time debounced search with intelligent fallback
+- **Internationalization**: RTL support (Arabic) with i18n
+- **UI Components**: Modular card system with skeleton loaders
 
 ### Infrastructure
 
@@ -251,12 +267,16 @@ AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
 - **Configuration Files**: Each package has a configuration utility for type-safe access to environment variables
 - **Security**: Never commit `.env` files to version control (they're already in `.gitignore`)
 
-## 📚 API Documentation
+## 📚 Documentation
+
+This project includes comprehensive documentation for all components and features:
+
+### API Documentation
 
 Once the API is running, you can access the Swagger documentation at:
 http://localhost:4009/api
 
-### iTunes API Integration
+#### iTunes API Integration
 
 The API includes comprehensive iTunes Search API integration with the following endpoints:
 
@@ -269,6 +289,76 @@ The API includes comprehensive iTunes Search API integration with the following 
 - **TV Show Search**: `GET /api/itunes/search/tvShow` - Search for TV shows
 
 For detailed API documentation, see [ITUNES_API.md](packages/api/ITUNES_API.md).
+
+### Frontend Documentation
+
+#### Search Functionality
+
+The frontend includes advanced search functionality with real-time API integration:
+
+- **Real-time Search**: 500ms debounced search with visual feedback
+- **Multi-content Support**: All media types with intelligent fallback
+- **Enhanced UX**: Loading states, error handling, and responsive design
+- **RTL Support**: Full support for Arabic and other right-to-left languages
+
+For detailed frontend search documentation, see [SEARCH_FUNCTIONALITY.md](packages/frontend/SEARCH_FUNCTIONALITY.md).
+
+#### Arabic Font Setup
+
+The frontend includes comprehensive RTL (Right-to-Left) language support with custom Arabic fonts:
+
+- **IBM Plex Sans Arabic**: Complete font family with all weights
+- **Automatic RTL Detection**: Language-aware layout switching
+- **Font Optimization**: Proper font loading and fallbacks
+- **Browser Compatibility**: Cross-browser RTL support
+
+For detailed Arabic font setup documentation, see [ARABIC_FONT_SETUP.md](packages/frontend/ARABIC_FONT_SETUP.md).
+
+#### Frontend Services
+
+The frontend services provide a comprehensive interface for consuming the iTunes API:
+
+- **Modular Architecture**: Separate concerns for types, API calls, and utilities
+- **React Hooks**: Easy integration with React components
+- **Type Safety**: Full TypeScript support
+- **Error Handling**: Comprehensive error management
+- **Tree Shaking**: Optimized bundle sizes
+
+For detailed frontend services documentation, see [Frontend Services README](packages/frontend/src/services/README.md).
+
+### Documentation Structure
+
+```
+tune8/
+├── README.md                           # Main project documentation
+├── packages/
+│   ├── api/
+│   │   └── ITUNES_API.md              # API documentation
+│   └── frontend/
+│       ├── SEARCH_FUNCTIONALITY.md    # Search feature documentation
+│       ├── ARABIC_FONT_SETUP.md       # RTL/Arabic font documentation
+│       └── src/services/README.md     # Frontend services documentation
+```
+
+### 📖 Available Documentation
+
+This project includes the following documentation files:
+
+| Document                                                              | Location                                    | Description                                               |
+| --------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------- |
+| **[Main README](README.md)**                                          | `/README.md`                                | Complete project overview, setup, and quick start guide   |
+| **[API Documentation](packages/api/ITUNES_API.md)**                   | `packages/api/ITUNES_API.md`                | iTunes API integration, endpoints, and usage examples     |
+| **[Search Functionality](packages/frontend/SEARCH_FUNCTIONALITY.md)** | `packages/frontend/SEARCH_FUNCTIONALITY.md` | Frontend search features, debouncing, and user experience |
+| **[Arabic Font Setup](packages/frontend/ARABIC_FONT_SETUP.md)**       | `packages/frontend/ARABIC_FONT_SETUP.md`    | RTL language support and Arabic font configuration        |
+| **[Frontend Services](packages/frontend/src/services/README.md)**     | `packages/frontend/src/services/README.md`  | Frontend service layer, hooks, and API integration        |
+
+**Quick Navigation:**
+
+- 🚀 **Getting Started**: [Main README](README.md)
+- 🔌 **API Reference**: [ITUNES_API.md](packages/api/ITUNES_API.md)
+- 🔍 **Search Features**: [SEARCH_FUNCTIONALITY.md](packages/frontend/SEARCH_FUNCTIONALITY.md)
+- 🌐 **RTL Support**: [ARABIC_FONT_SETUP.md](packages/frontend/ARABIC_FONT_SETUP.md)
+- ⚙️ **Frontend Services**: [Frontend Services README](packages/frontend/src/services/README.md)
 
 ## 🗄️ Database Setup
 

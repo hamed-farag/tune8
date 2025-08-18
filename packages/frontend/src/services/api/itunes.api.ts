@@ -1,7 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import {
-  ItunesSearchParams,
-  ItunesGenericSearchResult,
   ItunesMusicSearchResult,
   ItunesArtistSearchResult,
   ItunesAlbumSearchResult,
@@ -28,21 +26,6 @@ function handleError(error: any): ItunesApiError {
     message: error.message || "An unexpected error occurred",
     status: 500,
   };
-}
-
-/**
- * Generic search across all media types
- */
-export async function searchItunes(params: ItunesSearchParams): Promise<ItunesGenericSearchResult> {
-  try {
-    const response: AxiosResponse<ItunesGenericSearchResult> = await axios.get(
-      `${API_BASE_URL}/itunes/search`,
-      { params }
-    );
-    return response.data;
-  } catch (error) {
-    throw handleError(error);
-  }
 }
 
 /**
@@ -128,106 +111,6 @@ export async function searchTvShow(term: string, limit = 25): Promise<ItunesTvSh
     const response: AxiosResponse<ItunesTvShowSearchResult> = await axios.get(
       `${API_BASE_URL}/itunes/search/tvshow`,
       { params: { term, limit } }
-    );
-    return response.data;
-  } catch (error) {
-    throw handleError(error);
-  }
-}
-
-/**
- * Search for music with advanced parameters
- */
-export async function searchMusicAdvanced(
-  term: string,
-  options: {
-    limit?: number;
-    country?: string;
-    lang?: string;
-    explicit?: string;
-  } = {}
-): Promise<ItunesMusicSearchResult> {
-  const { limit = 25, country = "US", lang = "en_us", explicit = "Yes" } = options;
-
-  try {
-    const response: AxiosResponse<ItunesMusicSearchResult> = await axios.get(
-      `${API_BASE_URL}/itunes/search/music`,
-      { params: { term, limit, country, lang, explicit } }
-    );
-    return response.data;
-  } catch (error) {
-    throw handleError(error);
-  }
-}
-
-/**
- * Search for podcasts with advanced parameters
- */
-export async function searchPodcastAdvanced(
-  term: string,
-  options: {
-    limit?: number;
-    country?: string;
-    lang?: string;
-    explicit?: string;
-  } = {}
-): Promise<ItunesPodcastSearchResult> {
-  const { limit = 25, country = "US", lang = "en_us", explicit = "Yes" } = options;
-
-  try {
-    const response: AxiosResponse<ItunesPodcastSearchResult> = await axios.get(
-      `${API_BASE_URL}/itunes/search/podcast`,
-      { params: { term, limit, country, lang, explicit } }
-    );
-    return response.data;
-  } catch (error) {
-    throw handleError(error);
-  }
-}
-
-/**
- * Search for movies with advanced parameters
- */
-export async function searchMovieAdvanced(
-  term: string,
-  options: {
-    limit?: number;
-    country?: string;
-    lang?: string;
-    explicit?: string;
-  } = {}
-): Promise<ItunesMovieSearchResult> {
-  const { limit = 25, country = "US", lang = "en_us", explicit = "Yes" } = options;
-
-  try {
-    const response: AxiosResponse<ItunesMovieSearchResult> = await axios.get(
-      `${API_BASE_URL}/itunes/search/movie`,
-      { params: { term, limit, country, lang, explicit } }
-    );
-    return response.data;
-  } catch (error) {
-    throw handleError(error);
-  }
-}
-
-/**
- * Search for TV shows with advanced parameters
- */
-export async function searchTvShowAdvanced(
-  term: string,
-  options: {
-    limit?: number;
-    country?: string;
-    lang?: string;
-    explicit?: string;
-  } = {}
-): Promise<ItunesTvShowSearchResult> {
-  const { limit = 25, country = "US", lang = "en_us", explicit = "Yes" } = options;
-
-  try {
-    const response: AxiosResponse<ItunesTvShowSearchResult> = await axios.get(
-      `${API_BASE_URL}/itunes/search/tvshow`,
-      { params: { term, limit, country, lang, explicit } }
     );
     return response.data;
   } catch (error) {

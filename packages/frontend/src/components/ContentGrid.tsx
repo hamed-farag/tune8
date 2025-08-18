@@ -35,7 +35,7 @@ interface ContentGridProps {
   contentType: string | undefined;
   isLoading: boolean;
   podcasts: ItunesPodcast[];
-  episodes: ItunesMusicTrack[];
+  musicTracks: ItunesMusicTrack[];
   artists: ItunesArtist[];
   albums: ItunesAlbum[];
   movies: ItunesMovie[];
@@ -47,7 +47,7 @@ export default function ContentGrid({
   contentType,
   isLoading,
   podcasts,
-  episodes,
+  musicTracks,
   artists,
   albums,
   movies,
@@ -61,7 +61,7 @@ export default function ContentGrid({
 
   // Get the appropriate skeleton component based on content type
   const getSkeletonComponent = () => {
-    const type = contentType || "all";
+    const type = contentType || "album";
 
     switch (type) {
       case "podcast":
@@ -84,7 +84,7 @@ export default function ContentGrid({
   // Get the appropriate card component and data based on content type
   const getCardComponentAndData = () => {
     console.log("getCardComponentAndData called with contentType:", contentType);
-    const type = contentType || "all";
+    const type = contentType || "album";
 
     switch (type) {
       case "podcast":
@@ -120,13 +120,13 @@ export default function ContentGrid({
       case "music track":
         return {
           Component: MusicTrackCard,
-          data: episodes,
+          data: musicTracks,
           propName: "track",
         };
       default:
         return {
           Component: GenericCard,
-          data: [...podcasts, ...episodes, ...artists, ...albums, ...movies, ...tvShows],
+          data: [...podcasts, ...musicTracks, ...artists, ...albums, ...movies, ...tvShows],
           propName: "item",
         };
     }
@@ -136,18 +136,9 @@ export default function ContentGrid({
   const SkeletonComponent = getSkeletonComponent();
 
   // Helper function to get the correct translation key for content types
-  const getContentTypeTranslationKey = (contentType: string | undefined) => {
-    const type = contentType || "all";
-    const translationMap: Record<string, string> = {
-      all: "common.contentTypes.all",
-      album: "common.contentTypes.album",
-      artist: "common.contentTypes.artist",
-      movie: "common.contentTypes.movie",
-      "music track": "common.contentTypes.musicTrack",
-      podcast: "common.contentTypes.podcast",
-      tvShow: "common.contentTypes.tvShow",
-    };
-    return translationMap[type] || "common.contentTypes.all";
+  const getContentTypeTranslationKey = (_contentType: string | undefined) => {
+    // Always return "Recommended for you" for ContentGrid
+    return "common.recommendedForYou";
   };
 
   return (

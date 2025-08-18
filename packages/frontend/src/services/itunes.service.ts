@@ -9,17 +9,12 @@ export * from "./utils/itunes.utils";
 
 // Legacy exports for backward compatibility
 import {
-  searchItunes,
   searchMusic,
   searchArtist,
   searchAlbum,
   searchPodcast,
   searchMovie,
   searchTvShow,
-  searchMusicAdvanced,
-  searchPodcastAdvanced,
-  searchMovieAdvanced,
-  searchTvShowAdvanced,
 } from "./api/itunes.api";
 
 import {
@@ -41,17 +36,12 @@ import {
 // Create a legacy service object for backward compatibility
 export const itunesService = {
   // API methods
-  search: searchItunes,
   searchMusic,
   searchArtist,
   searchAlbum,
   searchPodcast,
   searchMovie,
   searchTvShow,
-  searchMusicAdvanced,
-  searchPodcastAdvanced,
-  searchMovieAdvanced,
-  searchTvShowAdvanced,
 
   // Utility methods
   getBestArtworkUrl,

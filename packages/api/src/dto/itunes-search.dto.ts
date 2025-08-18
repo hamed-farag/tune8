@@ -33,9 +33,8 @@ export class ItunesSearchDto {
       "tvShow",
       "software",
       "ebook",
-      "all",
     ],
-    default: "all",
+    default: "album",
     required: false,
   })
   @IsOptional()
@@ -49,9 +48,8 @@ export class ItunesSearchDto {
     "tvShow",
     "software",
     "ebook",
-    "all",
   ])
-  media?: string = "all";
+  media?: string = "album";
 
   @ApiProperty({
     description: "The type of results you want returned, relative to the specified media type",

@@ -23,7 +23,6 @@ export default function ContentTypeSelector({ value, onValueChange }: ContentTyp
         <SelectValue placeholder={t("common.contentType")} />
       </SelectTrigger>
       <SelectContent className="bg-gray-800 border-gray-600 text-white">
-        <SelectItem value="all">{t("common.contentTypes.all")}</SelectItem>
         <SelectItem value="album">{t("common.contentTypes.album")}</SelectItem>
         <SelectItem value="artist">{t("common.contentTypes.artist")}</SelectItem>
         <SelectItem value="movie">{t("common.contentTypes.movie")}</SelectItem>

@@ -30,7 +30,7 @@ Search for content across all media types in the iTunes Store.
 
 - `term` (required): The URL-encoded text string you want to search for
 - `country` (optional): Two-letter country code (default: US)
-- `media` (optional): Media type to search for (default: all)
+- `media` (optional): Media type to search for (default: album)
 - `entity` (optional): Type of results to return
 - `attribute` (optional): Attribute to search for
 - `limit` (optional): Number of results (1-200, default: 50)
@@ -197,7 +197,7 @@ Available media types for the general search endpoint:
 - `tvShow`: TV Shows
 - `software`: Software/Apps
 - `ebook`: E-books
-- `all`: All media types (default)
+- `album`: Albums (default)
 
 ## Entities
 
@@ -287,6 +287,15 @@ The API is configured with CORS support for the frontend application, allowing c
 ```bash
 curl "http://localhost:4009/api/itunes/search/music?term=jack+johnson&limit=5"
 ```
+
+## Related Documentation
+
+For more information about the frontend integration and related features:
+
+- **[Frontend Search Functionality](../frontend/SEARCH_FUNCTIONALITY.md)** - How the frontend consumes this API
+- **[Frontend Services](../frontend/src/services/README.md)** - Frontend service layer documentation
+- **[Arabic Font Setup](../frontend/ARABIC_FONT_SETUP.md)** - RTL language support
+- **[Main Project README](../../README.md)** - Complete project overview and setup
 
 ### Search for movies with specific country
 
