@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { Sidebar, Header, ErrorDisplay, ContentGrid, EpisodesGrid } from "@/components";
-import { useItunesData } from "@/hooks/useItunesData";
+import { useItunesData, useDebounce } from "@/hooks";
 
 interface HomePageProps {
   params: {
@@ -17,10 +17,11 @@ export default function HomePage({ params }: HomePageProps) {
   const [contentType, setContentType] = useState("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  console.log("HomePage contentType state:", contentType);
+  // Debounce the search query to avoid too many API calls
+  const [debouncedSearchQuery, isDebouncing] = useDebounce(searchQuery, 500);
 
   const { podcasts, episodes, artists, albums, movies, tvShows, isLoading, error, fetchData } =
-    useItunesData(contentType);
+    useItunesData(contentType, debouncedSearchQuery);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -40,6 +41,8 @@ export default function HomePage({ params }: HomePageProps) {
           contentType={contentType}
           onContentTypeChange={setContentType}
           onToggleSidebar={toggleSidebar}
+          isLoading={isLoading}
+          isDebouncing={isDebouncing}
         />
 
         {/* Main Content Area */}

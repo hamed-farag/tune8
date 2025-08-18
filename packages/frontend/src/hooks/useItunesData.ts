@@ -16,7 +16,7 @@ import {
   ItunesTvShow,
 } from "@/services/types/itunes.types";
 
-// Search terms for different content types
+// Search terms for different content types (fallback when no search query)
 const PODCAST_SEARCH_TERMS = ["technology", "business", "health", "education", "entertainment"];
 const MUSIC_SEARCH_TERMS = ["pop", "rock", "jazz", "classical", "hip hop", "electronic"];
 const ARTIST_SEARCH_TERMS = ["ed sheeran", "taylor swift", "beyonce", "drake", "bts"];
@@ -30,7 +30,7 @@ const TV_SHOW_SEARCH_TERMS = [
   "the office",
 ];
 
-export function useItunesData(contentType: string | undefined) {
+export function useItunesData(contentType: string | undefined, searchQuery?: string) {
   const [podcasts, setPodcasts] = useState<ItunesPodcast[]>([]);
   const [episodes, setEpisodes] = useState<ItunesMusicTrack[]>([]);
   const [artists, setArtists] = useState<ItunesArtist[]>([]);
@@ -40,8 +40,14 @@ export function useItunesData(contentType: string | undefined) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Get random search terms based on content type
-  const getRandomSearchTerms = () => {
+  // Get search term based on content type and search query
+  const getSearchTerm = () => {
+    // If search query is provided and not empty, use it
+    if (searchQuery && searchQuery.trim()) {
+      return searchQuery.trim();
+    }
+
+    // Otherwise, use random search terms as fallback
     const type = contentType || "all";
     const searchTermsMap = {
       podcast: PODCAST_SEARCH_TERMS,
@@ -64,13 +70,13 @@ export function useItunesData(contentType: string | undefined) {
     return terms[Math.floor(Math.random() * terms.length)];
   };
 
-  // Fetch data from API based on content type
+  // Fetch data from API based on content type and search query
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const searchTerm = getRandomSearchTerms();
+      const searchTerm = getSearchTerm();
       const type = contentType || "all";
 
       switch (type) {
@@ -144,14 +150,8 @@ export function useItunesData(contentType: string | undefined) {
         default: {
           // For "all" content type, fetch mixed content
           const [allPodcastResponse, allMusicResponse] = await Promise.all([
-            searchPodcast(
-              PODCAST_SEARCH_TERMS[Math.floor(Math.random() * PODCAST_SEARCH_TERMS.length)],
-              6
-            ),
-            searchMusic(
-              MUSIC_SEARCH_TERMS[Math.floor(Math.random() * MUSIC_SEARCH_TERMS.length)],
-              6
-            ),
+            searchPodcast(searchTerm, 6),
+            searchMusic(searchTerm, 6),
           ]);
 
           setPodcasts(allPodcastResponse.results || []);
@@ -177,11 +177,11 @@ export function useItunesData(contentType: string | undefined) {
     }
   };
 
-  // Load data on component mount and when content type changes
+  // Load data on component mount and when content type or search query changes
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentType]);
+  }, [contentType, searchQuery]);
 
   return {
     podcasts,
