@@ -9,6 +9,15 @@ import {
 
 import { sanitizeDataForDynamoDB } from "../helpers/dynamodbHelpers";
 
+type IDynamoDBClientConfig = {
+  region: string;
+  credentials: {
+    accessKeyId: string;
+    secretAccessKey: string;
+  };
+  endpoint?: string;
+};
+
 @Injectable()
 export class DynamoDBService implements OnModuleInit {
   private readonly logger = new Logger(DynamoDBService.name);
@@ -16,25 +25,34 @@ export class DynamoDBService implements OnModuleInit {
   private readonly docClient: DynamoDBDocumentClient;
 
   constructor(private readonly configService: ConfigService) {
-    this.client = new DynamoDBClient({
-      endpoint: this.configService.get<string>("dynamodb.endpoint"),
+    const config: IDynamoDBClientConfig = {
       region: this.configService.get<string>("dynamodb.region"),
       credentials: {
         accessKeyId: this.configService.get<string>("dynamodb.accessKeyId"),
         secretAccessKey: this.configService.get<string>("dynamodb.secretAccessKey"),
       },
-    });
+    };
 
+    // Only add endpoint for local development
+    const endpoint = this.configService.get<string>("dynamodb.endpoint");
+    if (endpoint) {
+      config.endpoint = endpoint;
+    }
+
+    this.client = new DynamoDBClient(config);
     this.docClient = DynamoDBDocumentClient.from(this.client);
   }
 
   async onModuleInit() {
     try {
-      await this.createItunesSearchResultsTable();
+      // Only create table in local development
+      const endpoint = this.configService.get<string>("dynamodb.endpoint");
+      if (endpoint) {
+        await this.createItunesSearchResultsTable();
+      }
       this.logger.log("DynamoDB service initialized successfully");
     } catch (error) {
       this.logger.error("Failed to initialize DynamoDB service", error);
-      // Don't throw here to allow the application to start even if DynamoDB fails
     }
   }
 

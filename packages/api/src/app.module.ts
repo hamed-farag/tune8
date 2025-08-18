@@ -16,7 +16,7 @@ import configuration from "./config/configuration";
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
-      envFilePath: ["../.env", ".env", ".env.local", ".env.development", ".env.production"],
+      envFilePath: ["../../../.env"],
     }),
     HttpModule,
   ],

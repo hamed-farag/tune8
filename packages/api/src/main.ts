@@ -7,7 +7,7 @@ import * as dotenv from "dotenv";
 import { AppModule } from "./app.module";
 
 // Load environment variables from root .env file
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: "../../.env" });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
