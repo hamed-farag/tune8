@@ -175,13 +175,12 @@ export default function SearchResultsGrid({
         <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t(getSectionTitle())}</h2>
         <div className="w-full">
           <div
-            className={cn(
-              "grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-              isRTL && "justify-items-end"
-            )}
+            className={cn("flex flex-wrap gap-3 sm:gap-4", isRTL ? "flex-row-reverse" : "flex-row")}
           >
             {Array.from({ length: 8 }).map((_, index) => (
-              <SkeletonComponent key={index} />
+              <div key={index} className="w-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                <SkeletonComponent />
+              </div>
             ))}
           </div>
         </div>
@@ -213,10 +212,7 @@ export default function SearchResultsGrid({
       <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t(getSectionTitle())}</h2>
       <div className="w-full">
         <div
-          className={cn(
-            "grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-            isRTL && "justify-items-end"
-          )}
+          className={cn("flex flex-wrap gap-3 sm:gap-4", isRTL ? "flex-row-reverse" : "flex-row")}
         >
           {searchResultItems.map((item, index) => {
             const itemId =
@@ -231,7 +227,14 @@ export default function SearchResultsGrid({
 
             // For other card types, pass the item as a prop
             const props = { [propName]: item } as any;
-            return <CardComponent key={`${itemId}-${index}`} {...props} />;
+            return (
+              <div
+                key={`${itemId}-${index}`}
+                className="w-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+              >
+                <CardComponent {...props} />
+              </div>
+            );
           })}
         </div>
       </div>

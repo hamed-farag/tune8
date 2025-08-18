@@ -21,6 +21,7 @@ const resources = {
           tvShow: "TV Show",
         },
         recommendedForYou: "Recommended for you",
+        notAvailable: "Not Available",
       },
       // Search
       search: {
@@ -78,6 +79,7 @@ const resources = {
           tvShow: "مسلسل تلفزيوني",
         },
         recommendedForYou: "موصى به لك",
+        notAvailable: "غير متوفر",
       },
       // Search
       search: {
