@@ -10,8 +10,8 @@ export default () => ({
   },
 
   dynamodb: {
-    // endpoint: process.env.DYNAMODB_ENDPOINT || "", // -> PRODUCTION
-    endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000", // -> DEVELOPMENT - LOCAL
+    endpoint: process.env.DYNAMODB_ENDPOINT || "", // -> PRODUCTION
+    // endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000", // -> DEVELOPMENT - LOCAL
     region: process.env.DYNAMODB_REGION || "fakeRegion",
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || "fakeMyKeyId",
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "fakeSecretAccessKey",
