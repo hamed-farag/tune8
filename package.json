@@ -10,7 +10,6 @@
     "/": "/",
     "build": "lerna run build",
     "build:api": "lerna run build --scope=@tune8/api",
-    "build:api:with-package": "lerna run build-with-package --scope=@tune8/api",
     "build:frontend": "lerna run build --scope=@tune8/frontend",
     "//": "//",
     "lint": "lerna run lint",
