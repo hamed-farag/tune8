@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Tune8 Next.js Frontend",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "next start -p ${FRONTEND_PORT:-4010}",
     "start:dev": "next dev -p ${FRONTEND_PORT:-4010}",
